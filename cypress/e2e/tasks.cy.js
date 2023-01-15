@@ -1,15 +1,35 @@
 /// <reference types="cypress" />
 
-import { faker } from '@faker-js/faker';
-
 describe('tarefas', () => {
 
     it('deve caastrar uma nova tarefa', () => {
-        cy.visit('http://localhost:8080')
 
-        cy.get('input[placeholder="Add a new Task"]')
-            .type(faker.music.songName())
+        const taskName = 'Ler um livro de Node.js'
 
-        cy.contains('button', 'Create').click()
+        cy.removeTaskByName(taskName)
+        cy.createTask(taskName)
+
+        cy.contains('main div p', taskName)
+            .should('be.visible')
+    })
+
+    it('não deve permitir tarefa duplicada', () => {
+
+        const task = {
+            name: 'Estudar Javascript',
+            is_done: false
+        }
+
+        cy.removeTaskByName(task.name)
+
+        // Dado que eu tenho uma tarefa duplicada
+        cy.postTask(task)
+        // Quando faço o cadastro dessa tarefa
+        cy.createTask(task.name)
+        //Então vejo a mensagem de duplicidade
+
+        cy.get('.swal2-html-container')
+            .should('be.visible')
+            .should('have.text', 'Task already exists!')
     })
 })
