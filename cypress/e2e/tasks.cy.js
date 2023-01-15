@@ -22,7 +22,7 @@ describe('tarefas', () => {
                 .should('be.visible')
         })
 
-        it.only('não deve permitir tarefa duplicada', () => {
+        it('não deve permitir tarefa duplicada', () => {
 
             const task = testData.dup
 
